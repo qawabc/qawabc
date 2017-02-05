@@ -8,21 +8,58 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="js/jquery-3.1.1.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/bootstrap-datepicker.js"></script>
+<script src="js/bootstrap.min.js"></script><!-- 
+<script type="text/javascript" src="js/bootstrap-datepicker.js"></script> -->
+<script type="text/javascript" src="js/jquery-ui.js"></script>
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet" href="css/bootstrap-datepicker.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="css/jquery-ui.css">
 
 <script>
 $( document ).ready(function() {
-    $('#mypicker123').datepicker({
-    	format : "yy/mm/dd",
-    	multidate : true
+
+    var dateFormat = "yy-mm-dd";
+
+	function getDate( element ) {
+	    var date;
+	    try {
+	    	console&&console.log("=================");
+	    	console&&console.log(dateFormat);
+	    	console&&console.log(element.value);
+	        date = $.datepicker.parseDate( dateFormat, element.value );
+	    	console&&console.log(date);
+	    } catch( error ) {
+	    	console&&console.log(error);
+	      date = null;
+	    }
+    	console&&console.log("return " + date);
+	    return date;
+	}
+	
+    var from = $( "#mypicker123" )
+      .datepicker({
+        defaultDate: "+1w",
+        changeMonth: true,
+        numberOfMonths: 1,
+        dateFormat:dateFormat
+      })
+      .on( "change", function() {
+        to.datepicker( "option", "minDate", getDate( this ) );
+      }),
+    to = $( "#mypicker321" ).datepicker({
+      defaultDate: "+1w",
+      changeMonth: true,
+      numberOfMonths: 1,
+      dateFormat:dateFormat
+    })
+    .on( "change", function() {
+      from.datepicker( "option", "maxDate", getDate( this ) );
     });
+    
    	$('#example').DataTable();
     var rlist = $('#reservelist').DataTable({
         "columnDefs": [
@@ -51,6 +88,7 @@ $( document ).ready(function() {
 div.container {
     width: 100%;
 }
+
 body {
 	padding-top: 60px;
 }
